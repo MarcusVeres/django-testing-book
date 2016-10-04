@@ -11,10 +11,15 @@
         To-Do Lists
     </h1>
 
-    <input type="text" id="add-new-item" placeholder="Enter a to-do item"> 
+    <form id="input-form"  method="POST">
+        <input type="text" name="item_text" id="add-new-item" placeholder="Enter a to-do item"> 
+        {% csrf_token %}
+    </form>
     
     <table id="list-table">
-
+        <tr>
+            <td>{{ new_item_text }}</td>
+        </tr>
     </table>
 
 </body>

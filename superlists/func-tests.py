@@ -1,4 +1,4 @@
-import unittest 
+import unittest, time 
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -49,10 +49,7 @@ class NewVisitorTest( unittest.TestCase ) :
 
         table = self.browser.find_element_by_id( 'list-table' )
         rows = table.find_elements_by_tag_name( 'tr' )
-        self.assertTrue( 
-            any( row.text == '1: ' + first_item_text for row in rows ) , 
-            'Could not find "' + first_item_text + '" in the table.'
-        )
+        self.assertIn( '1: ' + first_item_text , [ row.text for row in rows ] )
 
         # There is still a text box inviting her to add another item. 
         # She enters "Use peacock feathers to make a fly" (Edith is very methodical)
