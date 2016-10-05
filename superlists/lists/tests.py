@@ -47,6 +47,27 @@ class DummyTest( TestCase ) :
         # self.assertEqual( response.content.decode() , expected_html )
 
 
+    def test_home_page_can_save_a_post_to_the_database( self ) : 
+
+        item_text = 'Some list item'
+
+        request = HttpRequest()
+        request.method = 'POST' 
+        request.POST['item_text'] = item_text
+
+        response = home_page( request )
+
+        # check that one new Item has been saved to the database
+        self.assertEqual( Item.objects.count() , 1 )
+
+        # verify that the object's text matches what we tried to save
+        new_item = Item.objects.first()
+        self.assertEqual( new_item.text , item_text )
+
+        # check that the text appears on the page 
+        self.assertContains( response , item_text )
+
+
 class ItemModelTest( TestCase ) : 
     
     def test_saving_and_retrieving_items( self ) : 
