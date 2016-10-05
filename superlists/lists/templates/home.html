@@ -15,11 +15,11 @@
         <input type="text" name="item_text" id="add-new-item" placeholder="Enter a to-do item"> 
         {% csrf_token %}
     </form>
-    
+
     <table id="list-table">
         {% for item in items %}
         <tr>
-            <td>1: {{ item.text }}</td>
+            <td>{{ forloop.counter }}: {{ item.text }}</td>
         </tr>
         {% endfor %}
     </table>
