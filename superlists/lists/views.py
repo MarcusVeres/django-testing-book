@@ -17,8 +17,15 @@ def home_page( request ):
         # "always redirect after a post"
         return redirect( '/' )
 
+
     # return the home page for all other requets
-    return render( request , 'home.html' )
+
+    # collect all items 
+    items = Item.objects.all()
+
+    return render( request , 'home.html' , {
+        'items' : items    
+    })
 
 
     # return render( request , 'home.html' , {
