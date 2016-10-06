@@ -56,9 +56,15 @@ class NewVisitorTest( LiveServerTestCase ) :
         first_item_text = 'Buy peacock feathers' 
         inputbox.send_keys( first_item_text )
 
-        # When she hits enter, the page updates, and now the page lists
+        # When she hits enter, she is taken to a new URL, and now the page lists:
         # "1: Buy peacock feathers" as an item in a to-do list
         inputbox.send_keys( Keys.ENTER )
+    
+        # check that the URL reflects that the user is in the lists section
+        edith_list_url = self.browser.current_url
+        self.assertRegexpMatches( edith_list_url , '/lists/.+' )
+
+        # ensure that the item entered appears on the page
         self.check_for_text_in_list_table( '1: ' + first_item_text )
 
         # There is still a text box inviting her to add another item. 
@@ -72,14 +78,40 @@ class NewVisitorTest( LiveServerTestCase ) :
         self.check_for_text_in_list_table( '1: ' + first_item_text )
         self.check_for_text_in_list_table( '2: ' + second_item_text )
 
-        # Edith wonders whether the site will remember her list. 
-        # Then she sees that the site has generated a unique URL for her 
-        # there is some explanatory text to that effect.
+        # A new user, Francis, comes to the website
+
+        ## We use a new browser session to make sure no information leaks between users
+        ## Meta-comments are made using two hashes
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        # Francis visits the home page, and there is no sign of Edith's shit
+        self.browser.get( self.live_server_url ) 
+        page_text = self.browser.find_element_by_tag_name( 'body' ).text
+        self.assertNotIn( first_item_text , page_text )
+        self.assertNotIn( second_item_text , page_text )
+
+        # Francis starts a list by entering a new item 
+        inputbox = self.browser.find_element_by_id( 'add-new-item' )
+        inputbox.send_keys( 'Buy milk' )
+        inputbox.send_keys( Keys.ENTER )
+
+        # Francis gets his own unique URL
+        francis_list_url = self.browser.current_url
+        self.assertRegexpMatches( francis_list_url , '/lists/.+' )
+        self.assertNotEqual( francis_list_url , edith_list_url )
+
+        # Again, there is no trace of Edith's list 
+        page_text = self.browser.find_element_by_tag_name( 'body' ).text
+        self.assertNotIn( first_item_text , page_text )
+        self.assertNotIn( second_item_text , page_text )
+
+        # However, Francis' item is visible on the page
+        self.assertIn( 'Buy milk' , page_text )
+
+        # Satisfied, both users leave the site
         self.fail( 'Finish writing the test!' )
 
-        # She visits that URL - her to-do list is still there.
-
-        # Satisfied, she goes back to sleep
 
 # run the test
 if __name__ == '__main__' : 
