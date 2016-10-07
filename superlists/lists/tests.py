@@ -64,21 +64,6 @@ class DummyTest( TestCase ) :
         self.assertEqual( Item.objects.count() , 0 )
 
 
-    def test_home_page_displays_all_list_items( self ) :
-
-        first_item_text = 'Some list item'
-        second_item_text = 'Another list item'
-
-        Item.objects.create( text = first_item_text )
-        Item.objects.create( text = second_item_text )
-
-        request = HttpRequest() 
-        response = home_page( request ) 
-
-        self.assertContains( response , first_item_text )
-        self.assertIn( second_item_text , response.content.decode() ) 
-
-
 class ItemModelTest( TestCase ) : 
     
     def test_saving_and_retrieving_items( self ) : 
