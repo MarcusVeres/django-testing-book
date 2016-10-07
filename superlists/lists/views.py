@@ -4,6 +4,13 @@ from django.shortcuts import redirect, render
 from lists.models import Item 
 
 
+def view_list( request ) :  
+
+    # pull all list items 
+    items = Item.objects.all() 
+    return render( request , 'home.html' , { 'items' : items } )
+
+
 def home_page( request ):
 
     if request.method == 'POST' : 
@@ -15,7 +22,7 @@ def home_page( request ):
         Item.objects.create( text = new_item_text )
 
         # "always redirect after a post"
-        return redirect( '/' )
+        return redirect( '/lists/the-only-list-in-the-world/' )
 
 
     # return the home page for all other requets

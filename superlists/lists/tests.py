@@ -54,7 +54,7 @@ class DummyTest( TestCase ) :
         response = home_page( request ) 
 
         self.assertEqual( response.status_code , 302 ) 
-        self.assertEqual( response[ 'location' ] , '/' )
+        self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
 
 
     def test_home_page_only_saves_items_when_necessary( self ) :
@@ -105,6 +105,23 @@ class ItemModelTest( TestCase ) :
         self.assertEqual( first_saved_item.text , 'The first (ever) list item' )
         self.assertEqual( second_saved_item.text , 'The second item' )
         self.assertEqual( third_saved_item.text , 'The third item' )
+
+
+class ListViewTest( TestCase ) : 
+
+    def test_displays_all_items( self ) :
+
+        item_1_text = 'Some item'
+        item_2_text = 'Another item' 
+
+        Item.objects.create( text = item_1_text )
+        Item.objects.create( text = item_2_text )
+
+        # use Django test client to retrieve URL, instead of calling the view directly
+        response = self.client.get( '/lists/the-only-list-in-the-world/' )
+
+        self.assertContains( response , item_1_text )
+        self.assertContains( response , item_2_text )
 
 
 # reference : 
