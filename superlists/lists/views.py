@@ -8,7 +8,7 @@ def view_list( request ) :
 
     # pull all list items 
     items = Item.objects.all() 
-    return render( request , 'home.html' , { 'items' : items } )
+    return render( request , 'list.html' , { 'items' : items } )
 
 
 def home_page( request ):
@@ -26,13 +26,7 @@ def home_page( request ):
 
 
     # return the home page for all other requets
-
-    # collect all items 
-    items = Item.objects.all()
-
-    return render( request , 'home.html' , {
-        'items' : items    
-    })
+    return render( request , 'home.html' )
 
 
     # return render( request , 'home.html' , {

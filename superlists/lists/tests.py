@@ -94,6 +94,12 @@ class ItemModelTest( TestCase ) :
 
 class ListViewTest( TestCase ) : 
 
+    def test_uses_list_template( self ) :
+
+        response = self.client.get( '/lists/the-only-list-in-the-world/' )
+        self.assertTemplateUsed( response , 'list.html' )
+
+
     def test_displays_all_items( self ) :
 
         item_1_text = 'Some item'
