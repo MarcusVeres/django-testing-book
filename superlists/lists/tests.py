@@ -25,38 +25,6 @@ class DummyTest( TestCase ) :
         # self.assertTrue( response.content.endswith( b'</html>' ))
 
 
-    def test_home_page_can_save_a_post_request( self ) :
-        
-        item_text = 'A new list item'
-
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST[ 'item_text' ] = item_text
-
-        response = home_page( request )
-
-        # check that one new item has been saved to the database
-        self.assertEqual( Item.objects.count() , 1 )
-
-        # verify that the object's text matches what we tried to save
-        new_item = Item.objects.first()
-        self.assertEqual( new_item.text , item_text ) 
-
-
-    def test_home_page_redirects_after_a_post_request( self ) :
-
-        item_text = 'A new list item' 
-
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST[ 'item_text' ] = item_text 
-
-        response = home_page( request ) 
-
-        self.assertEqual( response.status_code , 302 ) 
-        self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
-
-
     def test_home_page_only_saves_items_when_necessary( self ) :
 
         request = HttpRequest()
@@ -98,6 +66,38 @@ class ListViewTest( TestCase ) :
 
         response = self.client.get( '/lists/the-only-list-in-the-world/' )
         self.assertTemplateUsed( response , 'list.html' )
+
+
+    def test_can_save_a_post_request( self ) :
+        
+        item_text = 'A new list item'
+
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST[ 'item_text' ] = item_text
+
+        response = home_page( request )
+
+        # check that one new item has been saved to the database
+        self.assertEqual( Item.objects.count() , 1 )
+
+        # verify that the object's text matches what we tried to save
+        new_item = Item.objects.first()
+        self.assertEqual( new_item.text , item_text ) 
+
+
+    def test_redirects_after_a_post_request( self ) :
+
+        item_text = 'A new list item' 
+
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST[ 'item_text' ] = item_text 
+
+        response = home_page( request ) 
+
+        self.assertEqual( response.status_code , 302 ) 
+        self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
 
 
     def test_displays_all_items( self ) :
