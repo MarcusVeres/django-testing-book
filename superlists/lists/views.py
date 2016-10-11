@@ -1,14 +1,18 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from lists.models import Item 
+from lists.models import Item , List
 
 
 def new_list( request ) :
 
+    # create a new parent list for the item to belong to
+    a_list = List.objects.create()
+
     # create a new list item using the provided item text
     Item.objects.create( 
-        text = request.POST.get( 'item_text' )
+        text = request.POST.get( 'item_text' ) , 
+        list = a_list , 
     )
 
     # redirect the user to a list page

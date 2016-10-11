@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from lists.models import Item 
+from lists.models import Item , List
 from lists.views import home_page
 
 class DummyTest( TestCase ) : 
@@ -25,21 +25,30 @@ class DummyTest( TestCase ) :
         # self.assertTrue( response.content.endswith( b'</html>' ))
 
 
-class ItemModelTest( TestCase ) : 
+class ListAndItemModelsTest( TestCase ) : 
     
     def test_saving_and_retrieving_items( self ) : 
 
+        a_list = List()
+        a_list.save()
+
         first_item = Item() 
         first_item.text = 'The first (ever) list item'
+        first_item.list = a_list
         first_item.save()
 
         second_item = Item()
         second_item.text = 'The second item'
+        second_item.list = a_list
         second_item.save()
 
         third_item = Item()
         third_item.text = 'The third item'
+        third_item.list = a_list
         third_item.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual( saved_list , a_list )
 
         saved_items = Item.objects.all()
         self.assertEqual( saved_items.count() , 3 )
@@ -52,6 +61,10 @@ class ItemModelTest( TestCase ) :
         self.assertEqual( second_saved_item.text , 'The second item' )
         self.assertEqual( third_saved_item.text , 'The third item' )
 
+        # lists are compared by checking if their primary key (.id attribute) is the same 
+        self.assertEqual( first_saved_item.list , a_list )
+        self.assertEqual( second_saved_item.list , a_list )
+        self.assertEqual( third_saved_item.list , a_list )
 
 
     def test_uses_list_template( self ) :
@@ -97,11 +110,13 @@ class ItemModelTest( TestCase ) :
 
     def test_displays_all_items( self ) :
 
+        a_list = List.objects.create()
+
         item_1_text = 'Some item'
         item_2_text = 'Another item' 
 
-        Item.objects.create( text = item_1_text )
-        Item.objects.create( text = item_2_text )
+        Item.objects.create( text = item_1_text , list = a_list )
+        Item.objects.create( text = item_2_text , list = a_list )
 
         # use Django test client to retrieve URL, instead of calling the view directly
         response = self.client.get( '/lists/the-only-list-in-the-world/' )
