@@ -60,7 +60,6 @@ class ItemModelTest( TestCase ) :
         self.assertEqual( third_saved_item.text , 'The third item' )
 
 
-class ListViewTest( TestCase ) : 
 
     def test_uses_list_template( self ) :
 
@@ -72,11 +71,12 @@ class ListViewTest( TestCase ) :
         
         item_text = 'A new list item'
 
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST[ 'item_text' ] = item_text
-
-        response = home_page( request )
+        self.client.post(
+            '/lists/new' , 
+            data = {
+                'item_text' : item_text 
+            }
+        )
 
         # check that one new item has been saved to the database
         self.assertEqual( Item.objects.count() , 1 )
@@ -90,14 +90,16 @@ class ListViewTest( TestCase ) :
 
         item_text = 'A new list item' 
 
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST[ 'item_text' ] = item_text 
+        response = self.client.post( 
+            '/lists/new' , 
+            data = {
+                'item_text' : item_text  
+            }
+        )
 
-        response = home_page( request ) 
-
-        self.assertEqual( response.status_code , 302 ) 
-        self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
+        self.assertRedirects( response , '/lists/the-only-list-in-the-world/' )
+        # self.assertEqual( response.status_code , 302 ) 
+        # self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
 
 
     def test_displays_all_items( self ) :
