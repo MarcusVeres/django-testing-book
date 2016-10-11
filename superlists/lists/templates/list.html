@@ -11,7 +11,7 @@
         To-Do Lists
     </h1>
 
-    <form id="input-form"  method="POST" action="/" >
+    <form id="input-form"  method="POST" action="/lists/new" >
         <input type="text" name="item_text" id="add-new-item" placeholder="Enter a to-do item"> 
         {% csrf_token %}
     </form>
