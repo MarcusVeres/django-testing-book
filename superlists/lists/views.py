@@ -6,10 +6,9 @@ from lists.models import Item , List
 
 def view_list( request , list_id ) :  
 
-    # pull all list items from the specified list
     current_list = List.objects.get( id = list_id )
-    items = Item.objects.filter( list = current_list ) 
-    return render( request , 'list.html' , { 'items' : items } )
+    return render( request , 'list.html' , { 'list' : current_list } )
+    # items = Item.objects.filter( list = current_list ) 
 
 
 def new_list( request ) :

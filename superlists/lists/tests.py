@@ -157,6 +157,18 @@ class ListViewTest( TestCase ) :
         self.assertNotContains( response , list_2_item_2  )
 
 
+    def test_passes_correct_list_to_template( self ) : 
+
+        wrong_list = List.objects.create()
+        correct_list = List.objects.create() 
+
+        response = self.client.get( '/lists/%d/' % correct_list.id ) 
+        
+        # response.context represents the context we're going to pass into the render function
+        # the Django test client puts it on the response object to help with testing
+        self.assertEqual( response.context['list'] , correct_list ) 
+
+
 class NewItemTest( TestCase ) : 
 
     def test_can_save_a_post_request_to_an_existing_list ( self ) : 

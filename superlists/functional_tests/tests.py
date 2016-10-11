@@ -110,7 +110,6 @@ class NewVisitorTest( LiveServerTestCase ) :
         self.assertIn( 'Buy milk' , page_text )
 
         # Satisfied, both users leave the site
-        self.fail( 'Finish writing the test!' )
 
 
 # run the test
