@@ -157,6 +157,44 @@ class ListViewTest( TestCase ) :
         self.assertNotContains( response , list_2_item_2  )
 
 
+class NewItemTest( TestCase ) : 
+
+    def test_can_save_a_post_request_to_an_existing_list ( self ) : 
+
+        item_text = 'Some text for a list item'
+
+        # create the other list first, so that it is the first list in the database
+        other_list = List.objects.create()
+        correct_list = List.objects.create() 
+
+        self.client.post( 
+            '/lists/%d/add_item' % correct_list.id ,
+            data = { 'item_text' : item_text }
+        )
+
+        self.assertEqual( Item.objects.count() , 1 )
+        new_item = Item.objects.first()
+
+        # check that the created item does not belong to the first list in line 
+        self.assertEqual( new_item.text , item_text ) 
+        self.assertEqual( new_item.list , correct_list )
+
+
+    def test_redirects_to_list_view ( self ) :
+
+        other_list = List.objects.create()
+        correct_list = List.objects.create() 
+
+        response = self.client.post( 
+            '/lists/%d/add_item' % correct_list.id , 
+            data = {
+                'item_text' : 'Text for item in an existing list' 
+            }
+        )
+
+        self.assertRedirects( response , '/lists/%d/' % correct_list.id )
+
+
 # reference : 
 
     # def test_some_example :

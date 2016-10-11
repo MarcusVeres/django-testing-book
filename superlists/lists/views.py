@@ -4,6 +4,14 @@ from django.shortcuts import redirect, render
 from lists.models import Item , List
 
 
+def view_list( request , list_id ) :  
+
+    # pull all list items from the specified list
+    current_list = List.objects.get( id = list_id )
+    items = Item.objects.filter( list = current_list ) 
+    return render( request , 'list.html' , { 'items' : items } )
+
+
 def new_list( request ) :
 
     # create a new parent list for the item to belong to
@@ -19,12 +27,17 @@ def new_list( request ) :
     return redirect( '/lists/%d/' % a_list.id )
 
 
-def view_list( request , list_id ) :  
+def add_item( request , list_id ) : 
 
-    # pull all list items from the specified list
-    current_list = List.objects.get( id = list_id )
-    items = Item.objects.filter( list = current_list ) 
-    return render( request , 'list.html' , { 'items' : items } )
+    item_text = request.POST.get( 'item_text' )
+    current_list = List.objects.get( id = list_id ) 
+
+    Item.objects.create(
+        text = item_text , 
+        list = current_list
+    )
+
+    return redirect( '/lists/%d/' % current_list.id )
 
 
 def home_page( request ):
