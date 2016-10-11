@@ -67,12 +67,6 @@ class ListAndItemModelsTest( TestCase ) :
         self.assertEqual( third_saved_item.list , a_list )
 
 
-    def test_uses_list_template( self ) :
-
-        response = self.client.get( '/lists/the-only-list-in-the-world/' )
-        self.assertTemplateUsed( response , 'list.html' )
-
-
     def test_can_save_a_post_request( self ) :
         
         item_text = 'A new list item'
@@ -103,7 +97,12 @@ class ListAndItemModelsTest( TestCase ) :
             }
         )
 
-        self.assertRedirects( response , '/lists/the-only-list-in-the-world/' )
+        # grab the list item we just created 
+        new_list = List.objects.first()
+        
+        self.assertRedirects( response , '/lists/%d/' % new_list.id )
+
+        # self.assertRedirects( response , '/lists/the-only-list-in-the-world/' )
         # self.assertEqual( response.status_code , 302 ) 
         # self.assertEqual( response[ 'location' ] , '/lists/the-only-list-in-the-world/' )
 
@@ -119,10 +118,43 @@ class ListAndItemModelsTest( TestCase ) :
         Item.objects.create( text = item_2_text , list = a_list )
 
         # use Django test client to retrieve URL, instead of calling the view directly
-        response = self.client.get( '/lists/the-only-list-in-the-world/' )
+        response = self.client.get( '/lists/%d/' % a_list.id )
 
         self.assertContains( response , item_1_text )
         self.assertContains( response , item_2_text )
+
+
+class ListViewTest( TestCase ) : 
+
+    def test_uses_list_template( self ) :
+
+        a_list = List.objects.create()
+        response = self.client.get( '/lists/%d/' % a_list.id )
+        self.assertTemplateUsed( response , 'list.html' )
+
+
+    def test_list_only_displays_its_own_items ( self ) :
+
+        list_1_item_1 = 'Some item'
+        list_1_item_2 = 'Another item'
+        list_2_item_1 = 'Wrong item'
+        list_2_item_2 = 'Another incorrect item'
+
+        correct_list = List.objects.create() 
+        Item.objects.create( text = list_1_item_1 , list = correct_list )
+        Item.objects.create( text = list_1_item_2 , list = correct_list )
+
+        wrong_list = List.objects.create()
+        Item.objects.create( text = list_2_item_1 , list = wrong_list )
+        Item.objects.create( text = list_2_item_2 , list = wrong_list )
+
+        # submit the page and check its contents
+        response = self.client.get( '/lists/%d/' % (correct_list.id,) )
+
+        self.assertContains( response , list_1_item_1 )
+        self.assertContains( response , list_1_item_2 )
+        self.assertNotContains( response , list_2_item_1 )
+        self.assertNotContains( response , list_2_item_2  )
 
 
 # reference : 
