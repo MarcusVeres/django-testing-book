@@ -112,6 +112,32 @@ class NewVisitorTest( LiveServerTestCase ) :
         # Satisfied, both users leave the site
 
 
+    # visual tests
+    def test_styling_and_layout( self ) : 
+
+        # Edith goes to the home page
+        self.browser.get( self.live_server_url ) 
+        self.browser.set_window_size( 1024 , 768 ) 
+
+        # She notices the input box is nicely centered
+        input_box = self.browser.find_element_by_id( 'add-new-item' ) 
+        self.assertAlmostEqual( 
+            input_box.location[ 'x' ] + input_box.size[ 'width' ] / 2 , 
+            512 , 
+            delta = 5   # works with AlmostEqual to give a +/- 5 pixel reading
+        )
+
+        # She starts a new list and notices the text is nicely centered 
+        input_box.send_keys( 'testing\n' )
+
+        input_box = self.browser.find_element_by_id( 'add-new-item' )
+        self.assertAlmostEqual( 
+            input_box.location[ 'x' ] + input_box.size[ 'width' ] / 2 ,
+            512 , 
+            delta = 5
+        )
+
+
 # run the test
 if __name__ == '__main__' : 
     unittest.main()
