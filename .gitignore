@@ -9,3 +9,6 @@ venv/
 # database
 db.sqlite3
 
+# npm 
+node_modules/
+
