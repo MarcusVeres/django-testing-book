@@ -1,4 +1,7 @@
 <!doctype html>
+
+{% load staticfiles %}
+
 <html>
 <head>
 
@@ -28,6 +31,7 @@
                         type="text" name="item_text" placeholder="Enter a to-do item"> 
                     {% csrf_token %}
                 </form>
+                <img src="{% static 'img/red-stripe.png' %}" style="width: 100%;">
             </div>
         </div>
     </div>
