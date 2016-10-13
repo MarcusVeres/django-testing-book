@@ -12,3 +12,6 @@ db.sqlite3
 # npm 
 node_modules/
 
+# django static
+/static/
+

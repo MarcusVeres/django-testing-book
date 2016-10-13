@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -119,3 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# for deployment :: gather up all static files and place them in a folder beside your installation 
+# use "python manage.py collectstatic" to populate this folder :: it should NOT be part of your repositiory  
+STATIC_ROOT = os.path.abspath( os.path.join( BASE_DIR , '../static' ) )
+
