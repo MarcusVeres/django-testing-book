@@ -1,4 +1,5 @@
 import unittest, time 
+import sys 
 
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -10,7 +11,38 @@ from selenium.webdriver.common.keys import Keys
 # class NewVisitorTest( LiveServerTestCase ) : 
 class NewVisitorTest( StaticLiveServerTestCase ) : 
 
-    # executed before all tests
+    # LiveServerTestCase always assumes that you want to use its own test server
+    # Sometimes, we want the ability to tell it not to bother, and use a real server instead 
+
+    # executed once, before all tests
+    @classmethod
+    def setUpClass( cls ) : 
+
+        # check to see if 'liveserver' is in our system arguments
+        for arg in sys.argv : 
+            if 'liveserver' in arg : 
+
+                # skip the normal setUpClass() and store our staging server URL in a varuable called server_url
+                cls.server_url = 'http://' + arg.split( '=' )[ 1 ]
+                return
+
+        # otherwise, run the regular setUpClass, and set the server_url to match the default live_server_url 
+        # NOTE : in python 2.x super() has to be called with the class name and the inital argument provided 
+        # in python 3, you can call super without arguments, like this: super()
+        super( NewVisitorTest , cls ).setUpClass()
+        cls.server_url = cls.live_server_url
+
+
+    # executed once, after all tests
+    @classmethod 
+    def tearDownClass( cls ) :
+
+        # clean up after ourselves if we happen to be running our tests on the live server 
+        if cls.server_url == cls.live_server_url: 
+            super( NewVisitorTest , cls ).tearDownClass()
+            
+
+    # executed before every test
     def setUp( self ) : 
 
         self.browser = webdriver.Chrome()
@@ -19,7 +51,7 @@ class NewVisitorTest( StaticLiveServerTestCase ) :
         self.browser.implicitly_wait( 3 ) 
 
 
-    # executed after all tests
+    # executed after every test 
     def tearDown( self ) : 
 
         self.browser.quit()
@@ -38,7 +70,7 @@ class NewVisitorTest( StaticLiveServerTestCase ) :
 
         # Edith has heard about a cool new online to-do app. 
         # She goes to check out its homepage
-        self.browser.get( self.live_server_url ) 
+        self.browser.get( self.server_url ) 
             # self.browser.get( 'http://localhost:9090' )
 
 
@@ -88,7 +120,7 @@ class NewVisitorTest( StaticLiveServerTestCase ) :
         self.browser = webdriver.Chrome()
 
         # Francis visits the home page, and there is no sign of Edith's shit
-        self.browser.get( self.live_server_url ) 
+        self.browser.get( self.server_url ) 
         page_text = self.browser.find_element_by_tag_name( 'body' ).text
         self.assertNotIn( first_item_text , page_text )
         self.assertNotIn( second_item_text , page_text )
@@ -118,7 +150,7 @@ class NewVisitorTest( StaticLiveServerTestCase ) :
     def test_styling_and_layout( self ) : 
 
         # Edith goes to the home page
-        self.browser.get( self.live_server_url ) 
+        self.browser.get( self.server_url ) 
         self.browser.set_window_size( 1024 , 768 ) 
 
         # She notices the input box is nicely centered
