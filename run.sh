@@ -1,4 +1,4 @@
 #!/bin/bash
 . venv/bin/activate &&
-cd superlists &&
+cd source &&
 python manage.py runserver 9090
