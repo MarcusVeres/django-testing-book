@@ -33,13 +33,13 @@ class NewVisitorTest( StaticLiveServerTestCase ) :
         cls.server_url = cls.live_server_url
 
 
-    # executed once, after all tests
-    @classmethod 
-    def tearDownClass( cls ) :
-
-        # clean up after ourselves if we happen to be running our tests on the live server 
-        if cls.server_url == cls.live_server_url: 
-            super( NewVisitorTest , cls ).tearDownClass()
+#    # executed once, after all tests
+#    @classmethod 
+#    def tearDownClass( cls ) :
+#
+#        # clean up after ourselves if we happen to be running our tests on the live server 
+#        if cls.server_url == cls.live_server_url: 
+#            super( NewVisitorTest , cls ).tearDownClass()
             
 
     # executed before every test
