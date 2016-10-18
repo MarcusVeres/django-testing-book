@@ -10,3 +10,10 @@ Run unit tests
 Run functional tests    
     cd superlists && python manage.py test functional_tests/
 
+-----
+
+### Live Testing 
+
+Run functional tests 
+    python manage.py test functional_tests/ --liveserver=pybook-staging.lazerstorm.com
+
