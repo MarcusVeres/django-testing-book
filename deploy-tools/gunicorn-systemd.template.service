@@ -1,0 +1,17 @@
+[Unit]
+Description=Starts Gunicorn server for Superlists staging site (SITENAME)
+After=network.target
+Conflicts=shutdown.target
+Before=shutdown.target
+DefaultDependencies=no
+
+[Service]
+Type=simple
+User=learner
+WorkingDirectory=/home/learner/sites/www/SITENAME/source
+ExecStart=/home/learner/sites/www/SITENAME/venv/bin/gunicorn superlists.wsgi:application --bind unix:/tmp/SITENAME.socket
+Restart=on-failure
+
+[Install]
+WantedBy=sysinit.target
+Alias=SITENAME.service
