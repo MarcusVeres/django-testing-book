@@ -41,8 +41,8 @@ def deploy() :
     _get_latest_source( site_folder , source_folder ) 
     _create_directory_structure_if_necessary( site_folder )
     _update_settings( source_folder , env.site_name )
+    _setup_virtualenv( site_folder ) 
     return
-    _update_virtualenv( source_folder ) 
     _update_static_files( source_folder ) 
     _update_database( source_folder ) 
 
@@ -108,6 +108,13 @@ def _update_settings( source_folder , site_name ) :
     print "\nUpdating secret key..."
     sed( settings_file , 'SECRET_KEY = .+$' , 'SECRET_KEY = "%s"' % ( new_key ) )
 
+
+def _setup_virtualenv( site_folder ) :
+    run( 'virtualenv %s/venv' % ( site_folder ) )
+    run( '. %s/venv/bin/activate && pip install -r %s/pip-requirements.txt' % ( site_folder , site_folder ) ) 
+    # run( 'cd %s && virtualenv venv && . venv/bin/activate && pip install -r pip-requirements.txt' % ( site_folder ) ) # difficult to debug
+    # IDEA: maybe the venv should be run as a bash script - i.e. run( 'cd %s && ./setup.sh % site_folder )
+    
 
 # syntax : fab function_name:host=hostname.com
 # example : fab deploy:host=dummy.com
