@@ -110,10 +110,13 @@ def _update_settings( source_folder , site_name ) :
 
 
 def _setup_virtualenv( site_folder ) :
-    run( 'virtualenv %s/venv' % ( site_folder ) )
-    run( '. %s/venv/bin/activate && pip install -r %s/pip-requirements.txt' % ( site_folder , site_folder ) ) 
+    # run( 'virtualenv %s/venv' % ( site_folder ) )
+    # run( '. %s/venv/bin/activate && pip install -r %s/pip-requirements.txt' % ( site_folder , site_folder ) ) 
     # run( 'cd %s && virtualenv venv && . venv/bin/activate && pip install -r pip-requirements.txt' % ( site_folder ) ) # difficult to debug
-    # IDEA: maybe the venv should be run as a bash script - i.e. run( 'cd %s && ./setup.sh % site_folder )
+
+    # IDEA: maybe the venv should be run as a bash script
+    # TODO: investigate whether or not this is a good idea - multiple points of failure vs cleaner code and easier to maintain than the crap above ^
+    run( 'cd %s && sh setup.sh' % ( site_folder ) )
     
 
 # syntax : fab function_name:host=hostname.com
