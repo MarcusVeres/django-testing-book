@@ -2,9 +2,6 @@ from fabric.contrib.files import append , exists , sed
 from fabric.api import task , env , local , run
 import random
 
-# allow fabric to use my ssh config file
-# env.use_ssh_config = True
-
 # variable setup 
 REPO_URL = 'https://github.com/MarcusVeres/django-testing-book.git'
 LOCAL_HOST = [ 'localhost' ]
@@ -20,6 +17,9 @@ def localhost() :
 
 @task
 def remote() :
+    # allow fabric to use my ssh config file
+    env.use_ssh_config = True
+
     env.run = run
     env.hosts = REMOTE_HOST
 
