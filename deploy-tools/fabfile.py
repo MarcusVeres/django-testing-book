@@ -37,9 +37,10 @@ def deploy() :
     # execute deploy functions 
     _describe_self( site_folder ) 
     _get_system_information() 
+    _create_main_folder_if_necessary( site_folder )
+    _get_latest_source( site_folder , source_folder ) 
     _create_directory_structure_if_necessary( site_folder )
     return
-    _get_latest_source( source_folder ) 
     _update_settings( source_folder , env.host ) 
     _update_virtualenv( source_folder ) 
     _update_static_files( source_folder ) 
@@ -55,24 +56,38 @@ def _get_system_information():
     run( "whoami" )
 
 
-def _create_directory_structure_if_necessary( site_folder ) : 
-    for subfolder in ( 'database' , 'static' , 'venv' , 'source' ) : 
-        run( 'mkdir -p %s/%s' % ( site_folder , subfolder ) ) 
+def _create_main_folder_if_necessary( site_folder ) : 
+    run ( 'mkdir -p %s' % ( site_folder ) )
 
 
-#def _get_latest_source( source_folder ) : 
-#
-#    # check if the git repo already exists 
+def _get_latest_source( site_folder , source_folder ) : 
+
+    # check if the git repo already exists 
+    if exists( site_folder + '/.git' ) : 
+        print "there is a git repo here" 
+
+    else : 
+        print "the git repo does not exist"
+        run( 'git clone %s %s' % ( REPO_URL , site_folder ) )
+
+    return
+
+
 #    if exists( site_folder + '/.git' ) : 
 #        run( 'cd %s && git fetch' % ( source_folder ) ) 
 #
 #    else : 
 #        run( 'git clone %s %s' % ( REPO_URL , site_folder ) 
-#
-#    # remember: your shit is a bit different than what he's done
-#    # chdir to site_folder 
-#    # run git pull into site_folder  
-#    # rename superlists folder to "source" 
+
+    # remember: your shit is a bit different than what he's done
+    # chdir to site_folder 
+    # run git pull into site_folder  
+    # rename superlists folder to "source" 
+
+
+def _create_directory_structure_if_necessary( site_folder ) : 
+    for subfolder in ( 'database' , 'static' , 'venv' , 'source' ) : 
+        run( 'mkdir -p %s/%s' % ( site_folder , subfolder ) ) 
 
 
 # syntax : fab function_name:host=hostname.com
