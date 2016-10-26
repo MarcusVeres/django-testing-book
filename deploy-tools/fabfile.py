@@ -33,6 +33,7 @@ def deploy() :
     # define vars 
     site_folder = '/home/%s/sites/www/%s' % ( env.user , env.site_name )
     source_folder = site_folder + '/source' 
+    virtualenv_folder = site_folder + '/venv'
 
     # execute deploy functions 
     _describe_self( site_folder ) 
@@ -41,9 +42,9 @@ def deploy() :
     _get_latest_source( site_folder , source_folder ) 
     _create_directory_structure_if_necessary( site_folder )
     _update_settings( source_folder , env.site_name )
-    _setup_virtualenv( site_folder ) 
+    _update_virtualenvenv( site_folder , virtualenv_folder ) 
+    _update_static_files( source_folder , virtualenv_folder ) 
     return
-    _update_static_files( source_folder ) 
     _update_database( source_folder ) 
 
 
@@ -109,15 +110,23 @@ def _update_settings( source_folder , site_name ) :
     sed( settings_file , 'SECRET_KEY = .+$' , 'SECRET_KEY = "%s"' % ( new_key ) )
 
 
-def _setup_virtualenv( site_folder ) :
-    # run( 'virtualenv %s/venv' % ( site_folder ) )
-    # run( '. %s/venv/bin/activate && pip install -r %s/pip-requirements.txt' % ( site_folder , site_folder ) ) 
-    # run( 'cd %s && virtualenv venv && . venv/bin/activate && pip install -r pip-requirements.txt' % ( site_folder ) ) # difficult to debug
+def _update_virtualenvenv( site_folder , virtualenv_folder ) :
 
     # IDEA: maybe the venv should be run as a bash script
     # TODO: investigate whether or not this is a good idea - multiple points of failure vs cleaner code and easier to maintain than the crap above ^
-    run( 'cd %s && sh setup.sh' % ( site_folder ) )
+        # run( 'cd %s && sh setup.sh' % ( site_folder ) )
+
+    # install virtualenv folder if it does not exist
+    if not exists( virtualenv_folder + '/bin/pip' ) : 
+        run( 'virtualenv %s' % ( virtualenv_folder ) )
+
+    # regardless of install state, install the requirements
+    run( '%s/bin/pip install -r %s/pip-requirements.txt' % ( virtualenv_folder , site_folder ) ) 
     
+
+def _update_static_files( source_folder , virtualenv_folder ) : 
+    run( '%s/bin/python %s/manage.py collectstatic --noinput' % ( virtualenv_folder , source_folder ) )
+
 
 # syntax : fab function_name:host=hostname.com
 # example : fab deploy:host=dummy.com
