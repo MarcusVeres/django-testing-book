@@ -44,8 +44,7 @@ def deploy() :
     _update_settings( source_folder , env.site_name )
     _update_virtualenvenv( site_folder , virtualenv_folder ) 
     _update_static_files( source_folder , virtualenv_folder ) 
-    return
-    _update_database( source_folder ) 
+    _update_database( source_folder , virtualenv_folder ) 
 
 
 def _describe_self( site_folder ) : 
@@ -126,6 +125,10 @@ def _update_virtualenvenv( site_folder , virtualenv_folder ) :
 
 def _update_static_files( source_folder , virtualenv_folder ) : 
     run( '%s/bin/python %s/manage.py collectstatic --noinput' % ( virtualenv_folder , source_folder ) )
+
+
+def _update_database( source_folder , virtualenv_folder ) : 
+    run( '%s/bin/python %s/manage.py migrate --noinput' % ( virtualenv_folder , source_folder ) )
 
 
 # syntax : fab function_name:host=hostname.com
