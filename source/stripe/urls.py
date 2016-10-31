@@ -14,13 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf.urls import include , url
+from django.conf.urls import url
 from django.contrib import admin
-from lists import views
+from stripe import views
+
+# (.+) will match any characters up to the following /
+# (\d+) will match any numbers up to the following /
 
 urlpatterns = [
-    url( r'^$' , views.home_page , name='home_page' ) , 
-    url( r'^lists/' , include( 'lists.urls' ) ),  
-    url( r'^stripe/' , include( 'stripe.urls' ) ),
+    url( r'^$' , views.stripe_home , name='stripe_home' ) ,
 ]
 
