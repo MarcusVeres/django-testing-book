@@ -28,7 +28,7 @@
                 </h1>
                 <img class="red-stripe" src="{% static 'img/red-stripe.png' %}">
                 <!-- TODO: make this a block with a different form for each payment -->
-                <form action="/payments/process_stripe" method="POST">
+                <form action="/payments/stripe_process" method="POST">
                     <script
                         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                         data-key="pk_test_drQzdsOgMxTgl2pevpEKLiYV"
