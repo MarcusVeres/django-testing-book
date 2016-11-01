@@ -23,5 +23,6 @@ from stripe import views
 
 urlpatterns = [
     url( r'^$' , views.stripe_home , name='stripe_home' ) ,
+    url( r'^process' , views.process , name='process' ) , 
 ]
 
