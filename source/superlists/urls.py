@@ -21,6 +21,6 @@ from lists import views
 urlpatterns = [
     url( r'^$' , views.home_page , name='home_page' ) , 
     url( r'^lists/' , include( 'lists.urls' ) ),  
-    url( r'^stripe/' , include( 'stripe.urls' ) ),
+    url( r'^payments/' , include( 'payments.urls' ) ),
 ]
 

@@ -5,10 +5,10 @@ import stripe
 
 # Create your views here.
 def stripe_home( request ) : 
-    return render( request , 'stripe/stripe-home.html' )
+    return render( request , 'payments/stripe-home.html' )
 
 
-def process( request ) :
+def stripe_process( request ) :
 
     # Set your secret key: remember to change this to your live secret key in production
     # See your keys here: https://dashboard.stripe.com/account/apikeys

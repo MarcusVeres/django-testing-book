@@ -16,13 +16,13 @@ Including another URLconf
 
 from django.conf.urls import url
 from django.contrib import admin
-from stripe import views
+from payments import views
 
 # (.+) will match any characters up to the following /
 # (\d+) will match any numbers up to the following /
 
 urlpatterns = [
     url( r'^$' , views.stripe_home , name='stripe_home' ) ,
-    url( r'^process' , views.process , name='process' ) , 
+    url( r'^stripe_process' , views.stripe_process , name='stripe_process' ) , 
 ]
 

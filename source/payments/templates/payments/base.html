@@ -13,7 +13,7 @@
     <title>Stripe Payment Test</title>
 
     <link rel="stylesheet" href="/static/lib/bootstrap/css/bootstrap.min.css" media="screen">
-    <link rel="stylesheet" href="/static/stripe/css/styles.css" media="screen">
+    <link rel="stylesheet" href="/static/payments/css/styles.css" media="screen">
 
 </head>
 <body>
@@ -27,14 +27,15 @@
                     {% block header_text %}{% endblock %}
                 </h1>
                 <img class="red-stripe" src="{% static 'img/red-stripe.png' %}">
-                <form action="/stripe/process" method="POST">
+                <!-- TODO: make this a block with a different form for each payment -->
+                <form action="/payments/process_stripe" method="POST">
                     <script
                         src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                         data-key="pk_test_drQzdsOgMxTgl2pevpEKLiYV"
                         data-amount="1000"
                         data-name="SickKids Hospital"
                         data-description="Donation"
-                        data-image="{% static 'stripe/img/sickkids-logo.png' %}" 
+                        data-image="{% static 'payments/img/sickkids-logo.png' %}" 
                         data-locale="auto"
                         data-currency="cad">
                     </script>
